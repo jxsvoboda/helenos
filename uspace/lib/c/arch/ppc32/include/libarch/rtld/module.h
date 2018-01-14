@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006 Martin Decky
+ * Copyright (c) 2019 Jiri Svoboda
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,38 +26,19 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** @addtogroup libcppc32
+/** @addtogroup libc
  * @{
  */
 /** @file
  */
 
-#ifndef LIBC_ppc32_TLS_H_
-#define LIBC_ppc32_TLS_H_
+#ifndef LIBC_ppc32_RTLD_MODULE_H_
+#define LIBC_ppc32_RTLD_MODULE_H_
 
-#define CONFIG_TLS_VARIANT_1
+#include <elf/elf_mod.h>
 
-#include <libc.h>
-
-#define ARCH_TP_OFFSET (0x7000 + sizeof(tcb_t))
-
-typedef struct {
-	void **dtv;
-	void *pad;
-	void *fibril_data;
-} tcb_t;
-
-static inline void __tcb_raw_set(void *tls)
-{
-	asm volatile ("mr %%r2, %0\n" :: "r" (tls));
-}
-
-static inline void *__tcb_raw_get(void)
-{
-	void *retval;
-	asm volatile ("mr %0, %%r2\n" : "=r" (retval));
-	return retval;
-}
+/** ELF module load flags */
+#define RTLD_MODULE_LDF 0
 
 #endif
 

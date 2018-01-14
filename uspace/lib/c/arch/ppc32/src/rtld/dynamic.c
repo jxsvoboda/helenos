@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006 Martin Decky
+ * Copyright (c) 2019 Jiri Svoboda
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,39 +27,25 @@
  */
 
 /** @addtogroup libcppc32
+ * @brief
  * @{
  */
-/** @file
+/**
+ * @file
  */
 
-#ifndef LIBC_ppc32_TLS_H_
-#define LIBC_ppc32_TLS_H_
+#include <stdio.h>
+#include <stdlib.h>
 
-#define CONFIG_TLS_VARIANT_1
+#include <rtld/elf_dyn.h>
+#include <rtld/dynamic.h>
 
-#include <libc.h>
-
-#define ARCH_TP_OFFSET (0x7000 + sizeof(tcb_t))
-
-typedef struct {
-	void **dtv;
-	void *pad;
-	void *fibril_data;
-} tcb_t;
-
-static inline void __tcb_raw_set(void *tls)
+void dyn_parse_arch(elf_dyn_t *dp, size_t bias, dyn_info_t *info)
 {
-	asm volatile ("mr %%r2, %0\n" :: "r" (tls));
+	(void) dp;
+	(void) bias;
+	(void) info;
 }
-
-static inline void *__tcb_raw_get(void)
-{
-	void *retval;
-	asm volatile ("mr %0, %%r2\n" : "=r" (retval));
-	return retval;
-}
-
-#endif
 
 /** @}
  */
