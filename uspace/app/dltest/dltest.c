@@ -70,19 +70,21 @@ static bool test_dlfcn_dl_get_constant(void)
 	int (*p_dl_get_constant)(void);
 	int val;
 
-	printf("Call dlsym/dl_get_constant...\n");
+//	printf("Call dlsym/dl_get_constant...\n");
 
 	p_dl_get_constant = dlsym(handle, "dl_get_constant");
 	if (p_dl_get_constant == NULL) {
-		printf("FAILED\n");
+//		printf("FAILED\n");
 		return false;
 	}
 
+//	printf("p_dl_get_constant = %p\n", p_dl_get_constant);
+
 	val = p_dl_get_constant();
 
-	printf("Got %d, expected %d... ", val, dl_constant);
+//	printf("Got %d, expected %d... ", val, dl_constant);
 	if (val != dl_constant) {
-		printf("FAILED\n");
+//		printf("FAILED\n");
 		return false;
 	}
 

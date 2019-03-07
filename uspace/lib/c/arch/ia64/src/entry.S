@@ -43,5 +43,5 @@ SYMBOL(_start)
 
 	# Pass PCB pointer as the first argument to __c_start
 	mov out0 = r2 ;;
-	br.call.sptk.many b0 = __c_start
+	br.call.sptk.many b0 = FUNCTION_REF(__c_start)
 

@@ -31,6 +31,7 @@ EXTRA_CFLAGS = -DDLTEST_LINKED
 LIBS = dltest
 # Need a dynamic link, but possibly still use static libc
 LINK_DYNAMIC = y
+STATIC_NOT_NEEDED = y
 
 BINARY = dltest
 

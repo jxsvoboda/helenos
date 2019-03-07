@@ -144,14 +144,14 @@ static void ski_init(void)
 	if (instance)
 		return;
 
-	asm volatile (
+/*	asm volatile (
 	    "mov r15 = %0\n"
 	    "break 0x80000\n"
 	    :
 	    : "i" (SKI_INIT_CONSOLE)
 	    : "r15", "r8"
 	);
-
+*/
 	faddr = frame_alloc(1, FRAME_LOWMEM | FRAME_ATOMIC, 0);
 	if (faddr == 0)
 		panic("Cannot allocate page for ski console.");

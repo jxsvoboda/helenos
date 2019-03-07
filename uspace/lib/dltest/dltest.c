@@ -46,14 +46,14 @@ int dl_public_var = dl_public_var_val;
 int dl_public_uvar;
 
 /** Private initialized fibril-local variable */
-static fibril_local int dl_private_fib_var = dl_private_fib_var_val;
+static int dl_private_fib_var = dl_private_fib_var_val;
 /** Private uninitialized fibril-local variable */
-static fibril_local int dl_private_fib_uvar;
+static int dl_private_fib_uvar;
 
 /** Public initialized fibril-local variable */
-fibril_local int dl_public_fib_var = dl_public_fib_var_val;
+int dl_public_fib_var = dl_public_fib_var_val;
 /** Public uninitialized fibril-local variable */
-fibril_local int dl_public_fib_uvar;
+int dl_public_fib_uvar;
 
 /** Return constant value. */
 int dl_get_constant(void)

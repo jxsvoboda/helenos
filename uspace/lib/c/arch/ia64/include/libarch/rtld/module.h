@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006 Jakub Jermar
+ * Copyright (c) 2019 Jiri Svoboda
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,19 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** @addtogroup libcia64
+/** @addtogroup libc
  * @{
  */
 /** @file
  */
 
-#ifndef LIBC_ia64_TLS_H_
-#define LIBC_ia64_TLS_H_
+#ifndef LIBC_ia64_RTLD_MODULE_H_
+#define LIBC_ia64_RTLD_MODULE_H_
 
-#define CONFIG_TLS_VARIANT_1
+#include <elf/elf_mod.h>
 
-#define ARCH_TP_OFFSET 0
-
-/* This structure must be exactly 16 bytes long */
-typedef struct {
-	void **dtv;
-	void *fibril_data;
-} tcb_t;
-
-static inline void __tcb_raw_set(void *tcb)
-{
-	asm volatile ("mov r13 = %0\n" : : "r" (tcb) : "r13");
-}
-
-static inline void *__tcb_raw_get(void)
-{
-	void *retval;
-	asm volatile ("mov %0 = r13\n" : "=r" (retval));
-	return retval;
-}
+/** ELF module load flags */
+#define RTLD_MODULE_LDF 0
 
 #endif
 

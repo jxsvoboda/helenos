@@ -26,7 +26,7 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-COMMON_CFLAGS += -fno-unwind-tables
+COMMON_CFLAGS += -fno-unwind-tables -Wl,-z,max-page-size=0x4000
 
 ENDIANESS = LE
 

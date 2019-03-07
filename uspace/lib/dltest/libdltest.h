@@ -66,8 +66,8 @@ extern int *dl_get_public_fib_uvar_addr(void);
 
 extern int dl_public_var;
 extern int dl_public_uvar;
-extern fibril_local int dl_public_fib_var;
-extern fibril_local int dl_public_fib_uvar;
+extern int dl_public_fib_var;
+extern int dl_public_fib_uvar;
 
 #endif
 
