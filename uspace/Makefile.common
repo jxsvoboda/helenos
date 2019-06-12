@@ -124,7 +124,11 @@ else
 				STATIC_BUILD = n
 			else
 				ifeq ($(LIBRARY),)
-					STATIC_BUILD = y
+					ifeq ($(DYNAMIC_NEEDED),y)
+						STATIC_BUILD = n
+					else
+						STATIC_BUILD = y
+					endif
 				else
 					STATIC_BUILD = n
 				endif
@@ -295,7 +299,7 @@ ifeq ($(CONFIG_STRIP_BINARIES),y)
 endif
 
 LIB_CFLAGS = $(CFLAGS) -fPIC
-LIB_LDFLAGS = $(LDFLAGS) -shared -Wl,-soname,$(LSONAME) -Wl,--no-undefined,--no-allow-shlib-undefined
+LIB_LDFLAGS = $(LDFLAGS) -fPIC -shared -Wl,-soname,$(LSONAME) -Wl,--no-undefined,--no-allow-shlib-undefined
 
 AS_CFLAGS := $(addprefix -Xassembler ,$(AFLAGS))
 

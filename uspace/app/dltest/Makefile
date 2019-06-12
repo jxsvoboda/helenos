@@ -32,6 +32,7 @@ LIBS = dltest
 # Need a dynamic link, but possibly still use static libc
 LINK_DYNAMIC = y
 STATIC_NOT_NEEDED = y
+DYNAMIC_NEEDED = y
 
 BINARY = dltest
 
