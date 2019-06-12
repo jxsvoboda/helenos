@@ -72,6 +72,51 @@ static uintptr_t get_module_gp(module_t *m)
 	return (uintptr_t) m->dyn.plt_got;
 }
 
+static void sym_table_print(module_t *m)
+{
+	size_t i;
+	elf_symbol_t *sym_table;
+	elf_symbol_t *sym;
+	elf_word *hash;
+	elf_word nbucket;
+	elf_word nchain;
+	size_t nsyment;
+	char *str_tab;
+
+	str_tab = m->dyn.str_tab;
+	printf("Print symbol table for module '%s'\n", m->dyn.soname);
+
+	hash = m->dyn.hash;
+	nbucket = hash[0];
+	nchain = hash[1];
+
+	sym_table = m->dyn.sym_tab;
+	nsyment = nchain;
+
+	for (i = 0; i < nsyment; i++) {
+		printf("entry %d of %d\n", (int)i, (int)nsyment);
+		sym = &sym_table[i];
+
+		printf(" * name '%s', info 0x%x, other 0x%x, shndx 0x%x, value 0x%lx, size 0x%lx\n",
+		    str_tab + sym->st_name,
+		    sym->st_info,
+		    sym->st_other,
+		    (unsigned)sym->st_shndx,
+		    sym->st_value,
+		    sym->st_size);
+	}
+
+	printf("Print hash table hash=%p\n", m->dyn.hash);
+	printf("nbucket=%u nchain=%u\n", nbucket, nchain);
+	for (i = 0; i < nbucket; i++) {
+		printf("bucket[%zu] = %u\n", i, hash[2 + i]);
+	}
+	for (i = 0; i < nchain; i++) {
+		printf("chain[%zu] = %u\n", i, hash[2 + nbucket + i]);
+	}
+
+}
+
 /**
  * Process (fixup) all relocations in a relocation table with explicit addends.
  */
@@ -95,6 +140,8 @@ void rela_table_process(module_t *m, elf_rela_t *rt, size_t rt_size)
 
 	elf_symbol_t *sym_def;
 	module_t *dest;
+
+	sym_table_print(m);
 
 	DPRINTF("parse relocation table\n");
 
