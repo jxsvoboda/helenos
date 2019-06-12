@@ -44,6 +44,9 @@
 #include <rtld/rtld_debug.h>
 #include <rtld/symbol.h>
 
+#undef DPRINTF
+#define DPRINTF printf
+
 /*
  * Hash tables are 32-bit (elf_word) even for 64-bit ELF files.
  */
@@ -67,7 +70,7 @@ static elf_symbol_t *def_find_in_module(const char *name, module_t *m)
 	elf_symbol_t *sym_table;
 	elf_symbol_t *s, *sym;
 	elf_word nbucket;
-	/*elf_word nchain;*/
+	elf_word nchain;
 	elf_word i;
 	char *s_name;
 	elf_word bucket;
@@ -76,15 +79,19 @@ static elf_symbol_t *def_find_in_module(const char *name, module_t *m)
 
 	sym_table = m->dyn.sym_tab;
 	nbucket = m->dyn.hash[0];
-	/*nchain = m->dyn.hash[1]; XXX Use to check HT range*/
+	nchain = m->dyn.hash[1];
 
 	bucket = elf_hash((unsigned char *)name) % nbucket;
+	DPRINTF("bucket=%u\n", bucket);
 	i = m->dyn.hash[2 + bucket];
 
 	sym = NULL;
 	while (i != STN_UNDEF) {
+		assert(i < nchain);
+
 		s = &sym_table[i];
 		s_name = m->dyn.str_tab + s->st_name;
+		DPRINTF("name='%s' s_name='%s'\n", name, s_name);
 
 		if (str_cmp(name, s_name) == 0) {
 			sym = s;
@@ -94,10 +101,30 @@ static elf_symbol_t *def_find_in_module(const char *name, module_t *m)
 		i = m->dyn.hash[2 + nbucket + i];
 	}
 
-	if (!sym)
-		return NULL;	/* Not found */
+/* XXX */
+	if (!sym) {
+		/* Not in hash table, try entire table */
+		for (i = 0; i < nchain; i++) {
+			s = &sym_table[i];
+			s_name = m->dyn.str_tab + s->st_name;
+			DPRINTF("name='%s' s_name='%s'\n", name, s_name);
 
+			if (str_cmp(name, s_name) == 0) {
+				sym = s;
+				break;
+			}
+		}
+
+		if (!sym) {
+			DPRINTF("symbol '%s' not found in '%s'\n",
+			    name, m->dyn.soname);
+			return NULL;	/* Not found */
+		}
+	}
+/* XXX */
 	if (sym->st_shndx == SHN_UNDEF) {
+		DPRINTF("symbol '%s' not a definition in '%s'\n",
+		    name, m->dyn.soname);
 		/* Not a definition */
 		return NULL;
 	}
